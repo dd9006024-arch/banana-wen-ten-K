@@ -1,0 +1,1 @@
+export function PageHero({label,title,description}:{label:string,title:React.ReactNode,description:string}){return <section className="page-hero"><p className="eyebrow">{label}</p><h1>{title}</h1><p>{description}</p></section>}

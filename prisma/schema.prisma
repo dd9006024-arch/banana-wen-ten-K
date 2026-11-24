@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+model ProductCategory {
+  id String @id @default(cuid())
+  name String @unique
+  products Product[]
+}
+model Product {
+  id String @id
+  name String
+  description String
+  price Int
+  unit String
+  image String
+  stock Int @default(0)
+  active Boolean @default(true)
+  fresh Boolean @default(false)
+  storage String?
+  categoryId String?
+  category ProductCategory? @relation(fields: [categoryId], references: [id])
+  items OrderItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Order {
+  id String @id @default(cuid())
+  orderNumber String @unique
+  recipient String
+  phone String
+  address String
+  delivery String
+  shipWeek String
+  paymentMethod String
+  paymentStatus String @default("TEST_PENDING")
+  status String @default("PENDING")
+  subtotal Int
+  shipping Int
+  total Int
+  ripenessConfirmed Boolean @default(false)
+  trackingNumber String?
+  items OrderItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model OrderItem {
+  id String @id @default(cuid())
+  orderId String
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+  productName String
+  unitPrice Int
+  quantity Int
+}
+model Experience {
+  id String @id
+  name String
+  price Int
+  capacity Int @default(12)
+  active Boolean @default(true)
+  bookings Booking[]
+}
+model Booking {
+  id String @id @default(cuid())
+  reference String @unique
+  experienceId String
+  experience Experience @relation(fields: [experienceId], references: [id])
+  date DateTime
+  slot String
+  people Int
+  name String
+  phone String
+  note String?
+  status String @default("PENDING")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([experienceId, date, slot, status])
+}
+model Article {
+  id String @id @default(cuid())
+  title String
+  slug String @unique
+  body String
+  image String?
+  published Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Recipe {
+  id String @id @default(cuid())
+  title String
+  ingredients Json
+  steps Json
+  image String?
+  published Boolean @default(false)
+}
+model CultureSpot {
+  id String @id @default(cuid())
+  name String
+  address String
+  description String
+  latitude Float?
+  longitude Float?
+  image String?
+}
+model Announcement {
+  id String @id @default(cuid())
+  title String
+  body String
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+}
+model SiteSetting {
+  key String @id
+  value String
+  updatedAt DateTime @updatedAt
+}

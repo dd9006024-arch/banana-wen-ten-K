@@ -55,4 +55,3 @@ npm run db:seed
 ```
 
 Render 會以 `npm start` 啟動，並使用 `DATABASE_URL` 連接 Render PostgreSQL。
-

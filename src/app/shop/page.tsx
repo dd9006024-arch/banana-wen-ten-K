@@ -1,0 +1,4 @@
+'use client';
+import {useMemo,useState} from 'react';import {ProductCard} from '@/components/product-card';import {PageHero} from '@/components/page-hero';import {products} from '@/lib/content';
+const categories=['全部商品','新鮮香蕉','香蕉加工品','禮盒專區','季節限定'];
+export default function Shop(){const [cat,setCat]=useState('全部商品');const shown=useMemo(()=>products.filter(p=>cat==='全部商品'||p.category===cat),[cat]);return <main><PageHero label="SHOP THE HARVEST" title={<>把旗山的好，<br/>好好帶回家。</>} description="從當季鮮蕉到蕉香點心，選一份產地的心意，分享給自己與重要的人。"/><section className="page-content"><div className="filter-row">{categories.map(c=><button key={c} className={`filter-chip ${cat===c?'active':''}`} onClick={()=>setCat(c)}>{c}</button>)}</div><div className="shop-grid">{shown.map(p=><ProductCard key={p.id} product={p}/>)}</div><p className="notice">鮮蕉依產季與熟度安排出貨。若當季售完，仍可選購加工品與體驗活動；商品資料目前使用示範內容，正式營運前請由管理端更新。</p></section></main>}
